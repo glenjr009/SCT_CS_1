@@ -2,7 +2,7 @@
 # Simple but gets the job done quicker.
 # Caesar Cipher tool which help (e)encrypt and (d)decrypt text with the help of an a shift key.
 # Shift Value is the key to (d)decrypt the (e)encrypted text 
-# Created by [Glen.F] aka [cyb3rPh03n1x]
+# Author [Glen.F] aka [cyb3rPh03n1x]
 
 def cipher(text, shift, mode):
     result = ""
@@ -58,4 +58,5 @@ def main():
             print(f"Decrypted : {decrypted}")
 
 if __name__ == "__main__":
+
     main()

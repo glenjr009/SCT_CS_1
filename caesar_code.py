@@ -55,5 +55,6 @@ def index():
     
     return render_template('index.html', result=result)
 
+# This part is only for local testing and will be ignored by PythonAnywhere's web server
 if __name__ == "__main__":
     app.run(debug=True)

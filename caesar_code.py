@@ -1,13 +1,28 @@
 # My first attempt at a Caesar Cipher tool.
-# Simple but gets the job done quicker.
+# Simple but gets the job quicker.
 # Caesar Cipher tool which help (e)encrypt and (d)decrypt text with the help of an a shift key.
-# Shift Value is the key to (d)decrypt the (e)encrypted text 
-# Author [Glen.F] aka [cyb3rPh03n1x]
+# Shift Value is the key to (d)decrypt the (e)encrypted text
+# Created by [Glen.F] aka [cyb3rPh03n1x]
 
-def cipher(text, shift, mode):
+from flask import Flask, render_template, request
+
+# Initialize the Flask application
+app = Flask(__name__)
+
+def cipher(text: str, shift: int, mode: str) -> str:
+    """
+    Encrypts or decrypts a text using the Caesar Cipher.
+
+    Args:
+        text (str): The message to process.
+        shift (int): The number of positions to shift.
+        mode (str): 'encrypt' or 'decrypt'.
+
+    Returns:
+        str: The processed message.
+    """
     result = ""
     
-    # Decryption is just a negative shift
     if mode == 'decrypt':
         shift = -shift
     
@@ -21,42 +36,24 @@ def cipher(text, shift, mode):
             shifted = (ord(char) - start + shift) % 26
             result += chr(shifted + start)
         else:
-            # Leave other characters alone
             result += char
             
     return result
 
-def main():
-    print("\n ***_CAESAR CIPHER PROGRAM_***")
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    """Handles the web page for the cipher tool."""
+    result = ""
+    if request.method == 'POST':
+        text = request.form.get('text')
+        try:
+            shift = int(request.form.get('shift'))
+        except (ValueError, TypeError):
+            shift = 0
+        mode = request.form.get('mode')
+        result = cipher(text, shift, mode)
     
-    while True:
-        choice = input("Enter '(e)' to encrypt an plain text, '(d)' to decrypt an ecrypted text, 'q' to quit the program: ").lower()
-        
-        if choice == 'q':
-            print("Goodbye Mate!")
-            break
-            
-        if choice not in ['e', 'd']:
-            print("Invalid choice.")
-            continue
-        
-        msg = input("Enter your message: ")
-        
-        # Make sure the shift value is a number
-        while True:
-            try:
-                shift_val = int(input("Enter the shift value: "))
-                break
-            except ValueError:
-                print("Must be a number.")
-        
-        if choice == 'e':
-            encrypted = cipher(msg, shift_val, 'encrypt')
-            print(f"Encrypted Message: {encrypted}")
-        else:
-            decrypted = cipher(msg, shift_val, 'decrypt')
-            print(f"Decrypted : {decrypted}")
+    return render_template('index.html', result=result)
 
 if __name__ == "__main__":
-
-    main()
+    app.run(debug=True)
